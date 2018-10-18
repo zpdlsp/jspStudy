@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.nextit.member.impl.MemberMapper">
+
+	<select id="selectMemberList"
+			parameterType="kr.or.nextit.member.MemberVo"
+			resultType="kr.or.nextit.member.MemberVo">
+		
+		SELECT
+		    mem_id as userID,
+		    mem_pw as userPW,
+		    mem_name as userName,
+		    mem_nickname as userHP,
+		    mem_zipcode as userSex,
+		    mem_addr as userEmail,
+		    reg_date
+		FROM
+		    tb_member1
+		    
+	</select>
+	
+	<select id="selectMemberItem"
+			parameterType="String"
+			resultType="kr.or.nextit.member.MemberVo">
+
+		SELECT
+			mem_id as userID,
+			mem_pw as userPW,
+			mem_name as userName,
+			mem_nickname as userHP,
+			mem_zipcode as userSex,
+			mem_addr as userEmail,
+			reg_date
+		FROM
+			tb_member1
+		WHERE
+			mem_id = #{userID} 
+
+	</select>
+
+
+
+
+
+</mapper>
