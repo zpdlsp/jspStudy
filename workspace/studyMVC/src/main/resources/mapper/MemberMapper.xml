@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.nextit.member.service.impl.MemberMapper">
+
+	<sql id="commonWhere">
+		<trim prefix="WHERE" prefixOverrides="AND | OR ">
+			<if test="searchType != null and searchType != '' and searchText != null and searchText != '' ">
+			    AND ${searchType} like '%' || #{searchText} || '%'
+			</if>
+		</trim>
+	</sql>
+	
+	<sql id="commonViewWhere">
+		<trim prefix="WHERE" prefixOverrides="AND | OR ">
+			<choose>
+				<when test="memId != null and memId != ''">
+					AND mem_id = #{memId}
+				</when>
+				<otherwise>
+					And mem_id = ''
+				</otherwise>
+			</choose>
+		</trim>
+	</sql>
+	
+	<select id="selectMemberList"
+			parameterType="kr.or.nextit.member.service.MemberSearchVo"
+			resultType="kr.or.nextit.member.service.MemberVo">
+			
+		SELECT
+		    rownum num,
+		    mem_id,
+		    mem_pw,
+		    mem_name,
+		    mem_nickname,
+		    mem_addr,
+		    reg_date
+		FROM
+		    tb_member1
+			<include refid="commonWhere"></include>
+		ORDER BY reg_date
+		
+	</select>
+	
+	<select id="selectMemberCnt"
+			parameterType="kr.or.nextit.member.service.MemberSearchVo"
+			resultType="int">
+			
+		SELECT COUNT(mem_id) as totalCount
+		  FROM tb_member1
+		<include refid="commonWhere"></include>
+	
+	</select>
+	
+	<select id="selectMemberItem"
+			parameterType="kr.or.nextit.member.service.MemberSearchVo"
+			resultType="kr.or.nextit.member.service.MemberVo">
+			
+		SELECT
+		    rownum num,
+		    mem_id,
+		    mem_pw,
+		    mem_name,
+		    mem_nickname,
+		    mem_addr,
+		    reg_date
+		FROM
+		    tb_member1
+		<include refid="commonViewWhere"></include>
+
+	</select>
+	
+	<delete id="deleteMemberItem"
+		parameterType="String">
+		
+		DELETE FROM tb_member1
+ 		 WHERE mem_id = #{memId}
+ 			
+	</delete>
+	
+	<update id="updateMemberItem"
+		parameterType="hashMap">
+		
+		UPDATE tb_member1
+		   SET mem_pw = #{memPw}
+		     , mem_name = #{memName}
+		     , mem_nickname = #{memNickname}
+		     , mem_addr = #{memAddr}
+		 WHERE mem_id = #{memId}
+		
+	</update>
+
+	<insert id="insertMemberItem" 
+		parameterType="kr.or.nextit.member.service.MemberVo" >
+		
+		INSERT INTO tb_member1 (
+		       mem_id
+		     , mem_pw
+		     , mem_name
+		     , mem_nickname
+		     , mem_addr
+		     , reg_date
+		) VALUES (
+		       #{memId}
+		     , #{memPw}
+		     , #{memName}
+		     , #{memNickname}
+		     , #{memAddr}
+		     , sysdate
+		)
+		
+	</insert>
+
+</mapper>
